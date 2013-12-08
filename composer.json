@@ -1,0 +1,17 @@
+{
+	"name": "milkyway/silverstripe-hasonecompositefield",
+	"description": "Save has_one relationships directly from the parent record form",
+	"type": "silverstripe-module",
+	"keywords": ["silverstripe", "relations", "has_one"],
+	"license": "BSD-3-Clause",
+	"authors": [{
+		"name": "Mellisa Hankins",
+		"email": "mell@milkywaymultimedia.com.au"
+	}],
+	"require": {
+		"silverstripe/framework": "~3.1"
+	},
+	"extra": {
+		"installer-name": "hasonecompositefield"
+	}
+}
