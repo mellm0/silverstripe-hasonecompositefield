@@ -24,9 +24,18 @@ class HasOneCompositeField extends CompositeField {
 	 */
 	protected $extraData = array();
 
-	public function __construct($name, $title = null, $record, FieldList $fields = null) {
+	/**
+	 * @var array
+	 */
+	protected $defaultFromParent = array();
+
+	/**
+	 * @var array
+	 */
+	protected $overrideFromParent = array();
+
+	public function __construct($name, $record, FieldList $fields = null) {
 		$this->name = $name;
-		$this->title = $title;
 		$this->record = $record;
 
 		if(!$fields) {
@@ -48,6 +57,24 @@ class HasOneCompositeField extends CompositeField {
 		return $this->extraData;
 	}
 
+	public function setDefaultFromParent($data = array()) {
+		$this->defaultFromParent = $data;
+		return $this;
+	}
+
+	public function getDefaultFromParent() {
+		return $this->defaultFromParent;
+	}
+
+	public function setOverrideFromParent($data = array()) {
+		$this->overrideFromParent = $data;
+		return $this;
+	}
+
+	public function getOverrideFromParent() {
+		return $this->overrideFromParent;
+	}
+
 	public function hasData() {
 		return true;
 	}
@@ -63,8 +90,31 @@ class HasOneCompositeField extends CompositeField {
 			$form->loadDataFrom($this->value);
 			$form->saveInto($this->record);
 
+			// Save extra data into field
 			if(count($this->extraData))
 				$this->record->castedUpdate($this->extraData);
+
+			if(!$this->record->ID && count($this->defaultFromParent)) {
+				foreach($this->defaultFromParent as $pField => $rField) {
+					if(is_numeric($pField)) {
+						if($this->record->$rField) continue;
+						$this->record->setCastedField($rField, $record->$rField);
+					}
+					else {
+						if($this->record->$pField) continue;
+						$this->record->setCastedField($rField, $record->$pField);
+					}
+				}
+			}
+
+			if(count($this->overrideFromParent)) {
+				foreach($this->overrideFromParent as $pField => $rField) {
+					if(is_numeric($pField))
+						$this->record->setCastedField($rField, $record->$rField);
+					else
+						$this->record->setCastedField($rField, $record->$pField);
+				}
+			}
 
 			$this->record->write();
 
