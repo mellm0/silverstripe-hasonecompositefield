@@ -39,8 +39,8 @@ class HasOneCompositeField extends CompositeField {
 		$this->record = $record;
 
 		if(!$fields) {
-			if($this->record->hasMethod('getHasOneFields'))
-				$fields = $this->record->getHasOneFields($name);
+			if($this->record->hasMethod('getHasOneCMSFields'))
+				$fields = $this->record->getHasOneCMSFields($name);
 			else
 				$fields = $this->record->getCMSFields()->dataFields();
 		}
