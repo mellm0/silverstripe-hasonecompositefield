@@ -42,7 +42,10 @@ class HasOneCompositeField extends CompositeField {
 			if($this->record->hasMethod('getHasOneCMSFields'))
 				$fields = $this->record->getHasOneCMSFields($name);
 			else
-				$fields = $this->record->getCMSFields()->dataFields();
+				$fields = $this->record->getCMSFields();
+
+			if($fields)
+				$fields = $fields->dataFields();
 		}
 
 		parent::__construct($fields);
